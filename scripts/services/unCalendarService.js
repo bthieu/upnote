@@ -30,8 +30,13 @@
      */
     function getDateListWithHighlight(inputMonth,inputYear) {
 
+
+      //use some service to connect to server and get list of date that have data
+      //if we don't have database, use mockhttp
+      var datesWithData = {};
+
       //first, get date list without data information
-      var dateList = getDateList(inputMonth, inputYear);
+      var dateList = getDateList(inputMonth, inputYear, datesWithData);
 
       //second, get data of dates
 
@@ -44,9 +49,10 @@
      * no addition data include
      * @param inputMonth
      * @param inputYear
+     * @param highlightDates
      * @returns {Array} date list of the month
      */
-    function getDateList(inputMonth, inputYear) {
+    function getDateList(inputMonth, inputYear, highlightDates) {
       var i, len, date;
       var dateListOfMonth = [];
 
@@ -54,12 +60,17 @@
       var monthInformation = getMonthInformation(inputMonth, inputYear);
       var previousMonthInformation = getMonthInformation(inputMonth - 1, inputYear);
 
+      var highlightDateArray = highlightDates || {};
+
       //build date list for target month
       for(i = 0; i < monthInformation.lastDate; i++ ) {
         date = {
           day: (monthInformation.firstDay + i)%7,
           date: i + 1
         };
+        if(highlightDateArray[i+1]) {
+          date.highlight = true;
+        }
         dateListOfMonth.push(date);
       }
 
