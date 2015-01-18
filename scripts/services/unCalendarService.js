@@ -9,18 +9,11 @@
     .factory('unCalendarService', unCalendarService);
 
   function unCalendarService() {
-    var targetMonth, targetYear, numberOfMonth;
 
     var unCalendarServiceObj = {
-      setTargetValues:setTargetValues,
-      getTargetMonth: getTargetMonth,
-      getTargetYear: getTargetYear,
-      getNumberOfMonth: getNumberOfMonth,
-
       getMonthInformation: getMonthInformation,
-
-      getDateList: getDateList,
-      getDateListWithoutData: getDateListWithoutData
+      getDateListWithHighlight: getDateListWithHighlight,
+      getDateList: getDateList
 
     };
 
@@ -31,50 +24,14 @@
     ////////////////////////////////////////////////////
 
     /**
-     * Set some necessary values for other progress
-     * @param inputMonth
-     * @param inputYear
-     * @param inputNumberOfMonth
-     */
-    function setTargetValues(inputMonth, inputYear, inputNumberOfMonth) {
-      targetMonth = inputMonth;
-      targetYear = inputYear;
-      numberOfMonth = inputNumberOfMonth;
-    }
-
-    /**
-     * Get target month
-     * @returns {*}
-     */
-    function getTargetMonth() {
-      return targetMonth;
-    }
-
-    /**
-     * Get target year
-     * @returns {*}
-     */
-    function getTargetYear() {
-      return targetYear;
-    }
-
-    /**
-     * Get target month
-     * @returns {*}
-     */
-    function getNumberOfMonth() {
-      return numberOfMonth;
-    }
-
-    /**
      * Get information of dates from input month & year
      * information include data of the date.
-     * @returns {{object}} list of dates and their information in the month(s)
+     * @returns {Array} list of dates and their information in the month(s)
      */
-    function getDateList() {
+    function getDateListWithHighlight(inputMonth,inputYear) {
 
       //first, get date list without data information
-      var dateList = getDateListWithoutData();
+      var dateList = getDateList(inputMonth, inputYear);
 
       //second, get data of dates
 
@@ -85,17 +42,17 @@
     /**
      * Get information of dates from input month & year
      * no addition data include
-     * @returns {{object}} date list of the month
+     * @param inputMonth
+     * @param inputYear
+     * @returns {Array} date list of the month
      */
-    function getDateListWithoutData() {
-
+    function getDateList(inputMonth, inputYear) {
       var i, len, date;
       var dateListOfMonth = [];
-      var dateList = {};
 
       //get some
-      var monthInformation = getMonthInformation(targetMonth, targetYear);
-      var previousMonthInformation = getMonthInformation(targetMonth - 1, targetYear);
+      var monthInformation = getMonthInformation(inputMonth, inputYear);
+      var previousMonthInformation = getMonthInformation(inputMonth - 1, inputYear);
 
       //build date list for target month
       for(i = 0; i < monthInformation.lastDate; i++ ) {
@@ -125,10 +82,7 @@
         };
         dateListOfMonth.push(date);
       }
-
-      //wrap date list with a key, in this case the key is a combination for target month & year
-      dateList[targetYear + '_' + targetMonth] = dateListOfMonth;
-      return dateList;
+      return dateListOfMonth;
 
     }
 
